@@ -1,4 +1,4 @@
-module.exports = class Iteration {
+module.exports = class Suggestion {
     constructor() {
         
     }

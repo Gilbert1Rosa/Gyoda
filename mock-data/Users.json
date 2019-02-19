@@ -1,14 +1,14 @@
 [
     {
         "id": "0011",
-        "nombre": "Gilbert Rosa",
+        "name": "Gilbert Rosa",
         "email": "gilbert@email.com",
-        "foto": ""
+        "photo": ""
     },
     {
         "id": "03373",
-        "nombre": "Juan Barcelo",
+        "name": "Juan Barcelo",
         "email": "juan.barcelo@email.com",
-        "foto": ""
+        "photo": ""
     }
 ]
