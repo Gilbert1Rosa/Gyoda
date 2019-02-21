@@ -3,19 +3,35 @@ const UserFactory = require('../../factory/UserFactory');
 
 module.exports = class MockUserDAO {
     constructor() {
-        this.file = './mock-data/Users.json';
+        this.file = './mock-data/Users1.json';
+    }
+
+    loadUsers(callback) {
+        fs.readFile(this.file, callback);
     }
     
     getUsers(callback) {
-        fs.readFile(this.file, callback);
+        this.loadUsers((err, data) => {
+            var users;
+            if (!err && callback != undefined) {
+                users = UserFactory(`${data}`.replace(/\s/g,''));
+            }
+            callback(err, users);
+        });
     }
 
     getUserById(id, callback) {
+        var userId = id;
         this.getUsers((err, data) => {
-            if (!err && callback != undefined) {
-                var users = `${data}`.replace(/\s/g,'');
-                callback(err, UserFactory(users));
+            var result = [];
+            if (!err) {
+                for (let user of data) {
+                    if (user.id == userId) {
+                        result.push(user);
+                    }
+                }
             }
+            callback(err, result);
         })
     }
 
