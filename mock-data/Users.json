@@ -2,12 +2,14 @@
     {
         "id": "0011",
         "name": "Gilbert Rosa",
+        "pass": "1234",
         "email": "gilbert@email.com",
         "photo": ""
     },
     {
         "id": "03373",
         "name": "Juan Barcelo",
+        "pass": "test",
         "email": "juan.barcelo@email.com",
         "photo": ""
     }

@@ -1,9 +1,8 @@
 const express = require('express');
 const basicResponse = require('../util/BasicResponse');
 const MockUserDAO = require('../data/mock-dao/MockUserDAO');
-const router = express.Router();
 
-module.exports = (app) => {
+module.exports = (router) => {
     router.post('/user', (req, res) => {
         var mockUserDAO = new MockUserDAO();
         var id = null;
