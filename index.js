@@ -13,7 +13,6 @@ var app = express();
 var router = express.Router();
 
 var userDAO = new MockUserDAO();
-var userService = UserService(router, userDAO);
 
 var logger = (req, res, next) => {
     console.log("Request received");
@@ -23,7 +22,9 @@ var logger = (req, res, next) => {
 app.use(logger);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+AuthService(app, userDAO);
 
-AuthService(app, UserService);
+var userService = UserService(app, router, userDAO);
+
 app.use('/gyoda/api', userService);
 app.listen(5000);

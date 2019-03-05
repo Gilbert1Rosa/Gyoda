@@ -1,10 +1,10 @@
 const express = require('express');
-var oauthServer = require('node-oauth2-server');
 var OAuthModel = require('../data/model/OAuthModel');
+var oauthServer = require('node-oauth2-server');
 var AccessTokenService = require('./AccessTokenService');
 
-module.exports = (app, userService) => {
-    var userDAO = userService.getUserDAO();
+module.exports = (app, injectedUserDAO) => {
+    var userDAO = injectedUserDAO;
     app.oauth = new oauthServer({
         model: OAuthModel(userDAO, AccessTokenService),
         grants: ['password'],

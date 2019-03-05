@@ -4,9 +4,9 @@ const MockUserDAO = require('../data/mock-dao/MockUserDAO');
 
 let userDAO;
 
-module.exports = (router, injectedUserDAO) => {
+module.exports = (app, router, injectedUserDAO) => {
     userDAO = injectedUserDAO;
-    router.post('/user', (req, res) => {
+    router.post('/user', app.oauth.authorise(), (req, res) => {
         var id = null;
         const serviceHandler = (err, data) => {
             var message = "";

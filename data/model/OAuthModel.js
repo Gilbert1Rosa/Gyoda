@@ -50,7 +50,6 @@ function getAccessToken(bearerToken, callback) {
 function getUser(user, password, callback) {
     console.log(`Getting user name: ${user}, password: ${password}`);
     userDAO.getUserByCredentials(user, password, (err, result) => {
-        console.log("Getting credentials");
         if (err) {
             throw Error("Error finding user");
         }
