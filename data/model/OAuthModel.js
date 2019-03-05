@@ -24,8 +24,8 @@ function getClient(clientID, clientSecret, callback) {
 }
 
 function saveAccessToken(accessToken, clientID, expires, user, callback) {
-    accessTokenService.saveAccessToken(user.userid, accessToken);
-    console.log(`Access token ${accessToken} for user ${user.userid} saved`);
+    accessTokenService.saveAccessToken(user.id, accessToken);
+    console.log(`Access token ${accessToken} for user ${user.id} saved`);
     callback(false);
 }
 
