@@ -24,7 +24,7 @@ function getClient(clientID, clientSecret, callback) {
 }
 
 function saveAccessToken(accessToken, clientID, expires, user, callback) {
-    accessTokenDAO.saveAccessToken(user.userid, accessToken);
+    accessTokenService.saveAccessToken(user.userid, accessToken);
     console.log(`Access token ${accessToken} for user ${user.userid} saved`);
     callback(false);
 }
@@ -35,7 +35,7 @@ function grantTypeAllowed(clientID, grantType, callback) {
 }
 
 function getAccessToken(bearerToken, callback) {
-    var userid = accessTokenDAO.findAccessToken(bearerToken);
+    var userid = accessTokenService.findAccessToken(bearerToken);
     var accessToken = {
         user: {
             id: userid
@@ -48,8 +48,9 @@ function getAccessToken(bearerToken, callback) {
 }
 
 function getUser(user, password, callback) {
-    console.log(`User id: ${user.userid}, name: ${user.username}, password: ${user.password}`);
+    console.log(`Getting user name: ${user}, password: ${password}`);
     userDAO.getUserByCredentials(user, password, (err, result) => {
+        console.log("Getting credentials");
         if (err) {
             throw Error("Error finding user");
         }

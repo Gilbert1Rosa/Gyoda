@@ -1,9 +1,19 @@
 var express = require('express')
 const bodyParser = require('body-parser');
+
+/* DAO */
+const MockUserDAO = require('./data/mock-dao/MockUserDAO');
+
+/* Service */
 const UserService = require('./service/UserService');
-const LoginService = require('./service/LoginService');
+const AuthService = require('./service/AuthService');
+
+/* Configuration */
 var app = express();
 var router = express.Router();
+
+var userDAO = new MockUserDAO();
+var userService = UserService(router, userDAO);
 
 var logger = (req, res, next) => {
     console.log("Request received");
@@ -14,6 +24,6 @@ app.use(logger);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use('/gyoda/api', LoginService(app));
-app.use('/gyoda/api', UserService(router));
+AuthService(app, UserService);
+app.use('/gyoda/api', userService);
 app.listen(5000);

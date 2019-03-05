@@ -14,7 +14,7 @@ module.exports = class MockUserDAO {
         this.loadUsers((err, data) => {
             var users;
             if (!err && callback != undefined) {
-                users = UserFactory(`${data}`.replace(/\s/g,''));
+                users = UserFactory(`${data}`);
             }
             callback(err, users);
         });
