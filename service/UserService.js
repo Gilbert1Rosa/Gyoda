@@ -2,9 +2,10 @@ const express = require('express');
 const basicResponse = require('../util/BasicResponse');
 const MockUserDAO = require('../data/mock-dao/MockUserDAO');
 
+let mockUserDAO = new MockUserDAO();
+
 module.exports = (router) => {
     router.post('/user', (req, res) => {
-        var mockUserDAO = new MockUserDAO();
         var id = null;
         const serviceHandler = (err, data) => {
             var message = "";
@@ -26,3 +27,8 @@ module.exports = (router) => {
     });
     return router;
 }
+
+module.exports.getUserDAO = () => {
+    return mockUserDAO;
+}
+

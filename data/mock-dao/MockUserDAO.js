@@ -32,10 +32,20 @@ module.exports = class MockUserDAO {
                 }
             }
             callback(err, result);
-        })
+        });
     }
 
-    findUsersByName(name, callback) {
-
+    getUserByCredentials(name, pass, callback) {
+        this.getUsers((err, data) => {
+            var result = [];
+            if (!err) {
+                for (let user of data) {
+                    if (user.name == name && user.password == pass) {
+                        result.push(user);
+                    }
+                }
+            }
+            callback(err, result);
+        });
     }
 }
