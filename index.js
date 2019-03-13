@@ -1,16 +1,16 @@
 var express = require('express')
 const bodyParser = require('body-parser');
 
-/* DAO */
+/* DAOs */
 const MockIterationDAO = require('./data/mock-dao/MockIterationDAO');
 const MockUserDAO = require('./data/mock-dao/MockUserDAO');
 
-/* Service */
+/* Services */
 const AuthService = require('./service/AuthService');
 const IterationService = require('./service/IterationService');
 const UserService = require('./service/UserService');
 
-/* Configuration */
+/* Configurations */
 var app = express();
 var router = express.Router();
 

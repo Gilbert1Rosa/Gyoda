@@ -1,6 +1,13 @@
 var Iteration = require('../data/model/Iteration');
 
-module.exports = (iterationJSON) => {
+/**
+ * Creates an Iteration object from a JSON representation.
+ * 
+ * @param {*} iterationJSON  Data of the iteration to be converted to an iteration object.
+ * 
+ * @returns {Iteration}  The Iteration object that represents the iteration on the JSON.
+ */
+const IterationFactory = (iterationJSON) => {
     var iterationData = JSON.parse(iterationJSON);
     var iterations = [];
     for (let iteration of iterationData) {
@@ -8,3 +15,5 @@ module.exports = (iterationJSON) => {
     }
     return iterations;
 }
+
+module.exports = IterationFactory;

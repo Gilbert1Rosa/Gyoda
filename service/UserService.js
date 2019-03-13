@@ -2,7 +2,15 @@ const basicResponse = require('../util/BasicResponse');
 
 let userDAO;
 
-module.exports = (app, router, injectedUserDAO) => {
+/**
+ *  The UserService function is intended to be a middleware
+ *  for managing users.
+ * 
+ *  @param {*}       app              Express middleware object.
+ *  @param {*}       router           Express router
+ *  @param {UserDAO} injectedUserDAO  Data provider for the users.
+ */
+const UserService = (app, router, injectedUserDAO) => {
     userDAO = injectedUserDAO;
     router.post('/user', app.oauth.authorise(), (req, res) => {
         var id = null;
@@ -27,6 +35,11 @@ module.exports = (app, router, injectedUserDAO) => {
     return router;
 }
 
+module.exports = UserService;
+
+/**
+ *  Gets the Data provider for the users.
+ */
 module.exports.getUserDAO = () => {
     return userDAO;
 }
