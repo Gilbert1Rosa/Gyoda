@@ -2,6 +2,18 @@ const basicResponse = require('../util/BasicResponse');
 
 let userDAO;
 
+const getHandler = (res) => {
+    return (err, data) => {
+        var message = "";
+        var errorCode = "";
+        if (!data || data == [] || err) {
+            message = `Data not found, an error happened: ${err}`;
+        }
+        var response = JSON.stringify(basicResponse(data, message, errorCode))
+        res.send(response); 
+    };
+}
+
 /**
  *  The UserService function is intended to be a middleware
  *  for managing users.
@@ -13,16 +25,8 @@ let userDAO;
 const UserService = (app, router, injectedUserDAO) => {
     userDAO = injectedUserDAO;
     router.post('/user', app.oauth.authorise(), (req, res) => {
+        const serviceHandler = getHandler(res);
         var id = null;
-        const serviceHandler = (err, data) => {
-            var message = "";
-            var errorCode = "";
-            if (!data || data == [] || err) {
-                message = `Data not found, an error happened: ${err}`;
-            }
-            var response = JSON.stringify(basicResponse(data, message, errorCode))
-            res.send(response); 
-        };
         if (req.body) {
             id = req.body.id;
         }
@@ -31,6 +35,12 @@ const UserService = (app, router, injectedUserDAO) => {
         } else {
             userDAO.getUsers(serviceHandler);
         }
+    });
+    router.put('/user', app.oauth.authorise(), (req, res) => {
+
+    });
+    router.delete('/user', app.oauth.authorise(), (req, res) => {
+
     });
     return router;
 }
