@@ -1,5 +1,6 @@
 const ServiceHandler = require('../util/ServiceHandler');
 
+let path = '/project';
 let projectDAO;
 
 /**
@@ -12,42 +13,53 @@ let projectDAO;
  */
 const ProjectService = (app, router, injectedProjectDAO) => {
     projectDAO = injectedProjectDAO;   
-    router.post('/project', app.oauth.authorise(), searchProject);
-    router.put('/project', app.oauth.authorise(), insertProject);
-    router.delete('/project', app.oauth.authorise(), deleteProject);
+    router.post(path, app.oauth.authorise(), SearchProject);
+    router.patch(path, app.oauth.authorise(), ModifyProject);
+    router.put(path, app.oauth.authorise(), InsertProject);
+    router.delete(path, app.oauth.authorise(), DeleteProject);
     return router;
 }
 
 /**
- * Middleware for posting an project to be searched.
+ * Middleware for posting a project to be searched.
  * 
  * @param {*} req Request object.
  * @param {*} res Response object.
  */
-const searchProject = (req, res) => {
+const SearchProject = (req, res) => {
     var project = null;
     const serviceHandler = ServiceHandler(req, res);
     // TODO: Make project fetching logic here
 }
 
 /**
- * Middleware for posting an project to be added.
+ * Middleware for patching a project to be modified.
  * 
  * @param {*} req Request object.
  * @param {*} res Response object.
  */
-const insertProject = (req, res) => {
+const ModifyProject = (req, res) => {
 
 }
 
 /**
- * Middleware for posting an project to be deleted.
+ * Middleware for posting a project to be added.
  * 
  * @param {*} req Request object.
  * @param {*} res Response object.
  */
-const deleteProject = (req, res) => {
+const InsertProject = (req, res) => {
+    // TODO: Make project inserting logic here
+}
 
+/**
+ * Middleware for posting a project to be deleted.
+ * 
+ * @param {*} req Request object.
+ * @param {*} res Response object.
+ */
+const DeleteProject = (req, res) => {
+    // TODO: Make project deleting logic here
 }
 
 module.exports = ProjectService;

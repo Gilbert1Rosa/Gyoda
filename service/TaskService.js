@@ -1,5 +1,6 @@
 const ServiceHandler = require('../util/ServiceHandler');
 
+let path = '/task';
 let taskDAO;
 
 /**
@@ -12,16 +13,51 @@ let taskDAO;
  */
 const TaskService = (app, router, injectedTaskDAO) => {
     taskDAO = injectedTaskDAO;
-    router.post('/task', app.oauth.authorise(), (req, res) => {
-        const serviceHandler = ServiceHandler(req, res);
-    });
-    router.put('/task', app.oauth.authorise(), (req, res) => {
-
-    });
-    router.delete('/task', app.oauth.authorise(), (req, res) => {
-
-    });
+    router.post(path, app.oauth.authorise(), SearchTask);
+    router.patch(path, app.oauth.authorise(), ModifyTask);
+    router.put(path, app.oauth.authorise(), InsertTask);
+    router.delete(path, app.oauth.authorise(), DeleteTask);
     return router;
+}
+
+/**
+ * Middleware for posting a task to be searched.
+ * 
+ * @param {*} req Request object.
+ * @param {*} res Response object.
+ */
+const SearchTask = (req, res) => {
+    const serviceHandler = ServiceHandler(req, res);
+}
+
+/**
+ * Middleware for modifying a task.
+ * 
+ * @param {*} req Request object.
+ * @param {*} res Response object.
+ */
+const ModifyTask = (req, res) => {
+
+}
+
+/**
+ * Middleware for inserting a task.
+ * 
+ * @param {*} req Request object.
+ * @param {*} res Response object.
+ */
+const InsertTask = (req, res) => {
+
+}
+
+/**
+ * Middleware for deleting a task.
+ * 
+ * @param {*} req Request object.
+ * @param {*} res Response object.
+ */
+const DeleteTask = (req, res) => {
+
 }
 
 module.exports = TaskService;

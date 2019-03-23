@@ -1,5 +1,6 @@
 const ServiceHandler = require('../util/ServiceHandler');
 
+let path = '/iteration';
 let iterationDAO;
 
 /**
@@ -12,31 +13,52 @@ let iterationDAO;
  */
 const IterationService = (app, router, injectedIterationDAO) => {
     iterationDAO = injectedIterationDAO;   
-    router.post('/iteration', app.oauth.authorise(), postIteration);
+    router.post(path, app.oauth.authorise(), SearchIteration);
+    router.patch(path, app.oauth.authorise(), ModifyIteration);
+    router.put(path, app.oauth.authorise(), InsertIteration);
+    router.delete(path, app.oauth.authorise(), DeleteIteration);
     return router;
 }
 
 /**
- * Middleware for posting an iteration to be added
+ * Middleware for posting an iteration to be added.
  * 
  * @param {*} req Request object.
  * @param {*} res Response object.
  */
-const postIteration = (req, res) => {
+const SearchIteration = (req, res) => {
     var project = null;
     const serviceHandler = ServiceHandler(req, res);
-    if (req.body) {
-        project = req.body.project;
-    }
-    if (project) {
-        iterationDAO.getIterationsByProject(project, serviceHandler);
-    } else {
-        var err = {
-            message: "Project parameter not found", 
-            errorCode: "0011"
-        }
-        serviceHandler(err, {}); // Send error message, in err object
-    }
+}
+
+/**
+ * Middleware for patching an iteration to be modified.
+ * 
+ * @param {*} req Request object.
+ * @param {*} res Response object.
+ */
+const ModifyIteration = (req, res) => {
+
+}
+
+/**
+ * Middleware for posting an iteration to be added.
+ * 
+ * @param {*} req Request object.
+ * @param {*} res Response object.
+ */
+const InsertIteration = (req, res) => {
+    // TODO: Make project inserting logic here
+}
+
+/**
+ * Middleware for posting an iteration to be deleted.
+ * 
+ * @param {*} req Request object.
+ * @param {*} res Response object.
+ */
+const DeleteIteration = (req, res) => {
+    // TODO: Make project deleting logic here
 }
 
 module.exports = IterationService;

@@ -7,8 +7,10 @@ const getHandler = (req, res) => {
         if (!data || data == [] || err) {
             message = `Data not found, an error happened: ${err}`;
         }
-        message = err.message ? err.message : message;
-        errorCode = err.errorCode ? err.errorCode : errorCode;
+        if (err) {
+            message = err.message ? err.message : message;
+            errorCode = err.errorCode ? err.errorCode : errorCode;
+        }
         var response = JSON.stringify(basicResponse(data, message, errorCode))
         res.send(response); 
     };
