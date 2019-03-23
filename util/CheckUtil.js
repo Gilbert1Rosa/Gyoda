@@ -1,14 +1,14 @@
 const checkProperties = (obj, properties) => {
-    var hasAllProperties = obj !== null && obj !== undefined;
-    for (property of properties) {
-        hasAllProperties = hasAllProperties && (key in obj);
+    var hasAllProperties = new Boolean(obj && properties);
+    if (hasAllProperties) {
+        hasAllProperties = getMissingProperties(obj, properties).length === 0;
     }
     return hasAllProperties;
 }
 
 const getMissingProperties = (obj, properties) => {
-    return properties.map((property) => {
-        return property in obj;
+    return properties.filter(property => {
+        return !(property in obj);
     });
 }
 
