@@ -1,3 +1,34 @@
 [
-    
+    {
+        "code": "3243HGD",
+        "user": "0011",
+        "state": "open",
+        "iteration": "1",
+        "title": "A task",
+        "description": "This is a task"
+    },
+    {
+        "code": "3142HGD",
+        "user": "0011",
+        "state": "open",
+        "iteration": "1",
+        "title": "Another task",
+        "description": "This is another a task"
+    },    
+    {
+        "code": "3143HDD",
+        "user": "03373",
+        "state": "open",
+        "iteration": "2",
+        "title": "Another one",
+        "description": "Another one"
+    },    
+    {
+        "code": "3143HBD",
+        "user": "03373",
+        "state": "open",
+        "iteration": "2",
+        "title": "Another one bites the dust",
+        "description": "Another one"
+    }
 ]

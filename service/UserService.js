@@ -1,18 +1,6 @@
-const basicResponse = require('../util/BasicResponse');
+const ServiceHandler = require('../util/ServiceHandler');
 
 let userDAO;
-
-const getHandler = (res) => {
-    return (err, data) => {
-        var message = "";
-        var errorCode = "";
-        if (!data || data == [] || err) {
-            message = `Data not found, an error happened: ${err}`;
-        }
-        var response = JSON.stringify(basicResponse(data, message, errorCode))
-        res.send(response); 
-    };
-}
 
 /**
  *  The UserService function is intended to be a middleware
@@ -25,7 +13,7 @@ const getHandler = (res) => {
 const UserService = (app, router, injectedUserDAO) => {
     userDAO = injectedUserDAO;
     router.post('/user', app.oauth.authorise(), (req, res) => {
-        const serviceHandler = getHandler(res);
+        const serviceHandler = ServiceHandler(req, res);
         var id = null;
         if (req.body) {
             id = req.body.id;

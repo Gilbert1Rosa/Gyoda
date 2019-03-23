@@ -1,4 +1,4 @@
-const basicResponse = require('../util/BasicResponse');
+const ServiceHandler = require('../util/ServiceHandler');
 
 let iterationDAO;
 
@@ -12,7 +12,7 @@ let iterationDAO;
  */
 const IterationService = (app, router, injectedIterationDAO) => {
     iterationDAO = injectedIterationDAO;   
-    router.post('/iteration', postIteration);
+    router.post('/iteration', app.oauth.authorise(), postIteration);
     return router;
 }
 
@@ -24,24 +24,18 @@ const IterationService = (app, router, injectedIterationDAO) => {
  */
 const postIteration = (req, res) => {
     var project = null;
-    const serviceHandler = (message, errorCode) => {
-        return (err, data) => {
-            var msg = message !== undefined? message : "";
-            var errCode = errorCode !== undefined? errorCode : "";
-            if ((!data || data == [] || err) && errorCode !== "" && message !== "") {
-                message = `Data not found, an error happened: ${err}`;
-            }
-            var response = JSON.stringify(basicResponse(data, msg, errCode))
-            res.send(response);
-        };
-    };
+    const serviceHandler = ServiceHandler(req, res);
     if (req.body) {
         project = req.body.project;
     }
     if (project) {
-        iterationDAO.getIterationsByProject(project, serviceHandler());
+        iterationDAO.getIterationsByProject(project, serviceHandler);
     } else {
-        serviceHandler("Project parameter not found", "0011")({}, {}); // Send error message, no need to pass valid objects to err and data
+        var err = {
+            message: "Project parameter not found", 
+            errorCode: "0011"
+        }
+        serviceHandler(err, {}); // Send error message, in err object
     }
 }
 

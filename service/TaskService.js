@@ -1,18 +1,6 @@
-const basicResponse = require('../util/BasicResponse');
+const ServiceHandler = require('../util/ServiceHandler');
 
 let taskDAO;
-
-const getHandler = (res) => {
-    return (err, data) => {
-        var message = "";
-        var errorCode = "";
-        if (!data || data == [] || err) {
-            message = `Data not found, an error happened: ${err}`;
-        }
-        var response = JSON.stringify(basicResponse(data, message, errorCode))
-        res.send(response); 
-    };
-}
 
 /**
  *  The TaskService function is intended to be a middleware
@@ -25,7 +13,7 @@ const getHandler = (res) => {
 const TaskService = (app, router, injectedTaskDAO) => {
     taskDAO = injectedTaskDAO;
     router.post('/task', app.oauth.authorise(), (req, res) => {
-        const serviceHandler = getHandler(res);
+        const serviceHandler = ServiceHandler(req, res);
     });
     router.put('/task', app.oauth.authorise(), (req, res) => {
 
