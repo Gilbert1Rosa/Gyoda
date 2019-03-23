@@ -14,7 +14,7 @@ let iterationDAO;
  */
 const IterationService = (app, router, injectedIterationDAO) => {
     iterationDAO = injectedIterationDAO;   
-    router.post(path, SearchIteration);
+    router.post(path, app.oauth.authorise(), SearchIteration);
     router.patch(path, app.oauth.authorise(), ModifyIteration);
     router.put(path, app.oauth.authorise(), InsertIteration);
     router.delete(path, app.oauth.authorise(), DeleteIteration);
