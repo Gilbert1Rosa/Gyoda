@@ -13,10 +13,10 @@ let userDAO;
  */
 const UserService = (app, router, injectedUserDAO) => {
     userDAO = injectedUserDAO;
-    router.post(path, SearchUser);
-    router.patch(path, ModifyUser);
-    router.put(path, app.oauth.authorise(), InsertUser);
-    router.delete(path, app.oauth.authorise(), DeleteUser);
+    router.post(path, searchUser);
+    router.patch(path, modifyUser);
+    router.put(path, app.oauth.authorise(), insertUser);
+    router.delete(path, app.oauth.authorise(), deleteUser);
     return router;
 }
 
@@ -26,7 +26,7 @@ const UserService = (app, router, injectedUserDAO) => {
  * @param {*} req Request object.
  * @param {*} res Response object.
  */
-const SearchUser = (req, res) => {
+const searchUser = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
     var id = null;
     if (req.body) {
@@ -45,7 +45,7 @@ const SearchUser = (req, res) => {
  * @param {*} req Request object.
  * @param {*} res Response object.
  */
-const ModifyUser = (req, res) => {
+const modifyUser = (req, res) => {
 
 }
 
@@ -55,7 +55,7 @@ const ModifyUser = (req, res) => {
  * @param {*} req Request object.
  * @param {*} res Response object.
  */
-const InsertUser = (req, res) => {
+const insertUser = (req, res) => {
 
 }
 
@@ -65,7 +65,7 @@ const InsertUser = (req, res) => {
  * @param {*} req Request object.
  * @param {*} res Response object.
  */
-const DeleteUser = (req, res) => {
+const deleteUser = (req, res) => {
 
 }
 

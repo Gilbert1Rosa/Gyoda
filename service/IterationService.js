@@ -1,4 +1,5 @@
 const ServiceHandler = require('../util/ServiceHandler');
+const CheckUtil = require('../util/CheckUtil');
 
 let path = '/iteration';
 let iterationDAO;
@@ -13,7 +14,7 @@ let iterationDAO;
  */
 const IterationService = (app, router, injectedIterationDAO) => {
     iterationDAO = injectedIterationDAO;   
-    router.post(path, app.oauth.authorise(), SearchIteration);
+    router.post(path, SearchIteration);
     router.patch(path, app.oauth.authorise(), ModifyIteration);
     router.put(path, app.oauth.authorise(), InsertIteration);
     router.delete(path, app.oauth.authorise(), DeleteIteration);
@@ -27,8 +28,18 @@ const IterationService = (app, router, injectedIterationDAO) => {
  * @param {*} res Response object.
  */
 const SearchIteration = (req, res) => {
-    var project = null;
     const serviceHandler = ServiceHandler(req, res);
+    const mandatoryFields = ["project"];
+    if (CheckUtil.checkProperties(req.body, mandatoryFields)) {
+        iterationDAO.getIterationsByProject(req.body.project, serviceHandler);
+    } else {
+        var fieldList = CheckUtil.getMissingProperties(req.body, mandatoryFields);
+        var err = {
+            message: `Los siguientes parametros no se encontraron: ${fieldList.join(",")}`,
+            errorCode: "0011"
+        }
+        serviceHandler(err, {}); // Send error message, in err object
+    }
 }
 
 /**
