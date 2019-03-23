@@ -1,19 +1,15 @@
 const checkProperties = (obj, properties) => {
-    var hasAllProperties = true;
+    var hasAllProperties = obj !== null && obj !== undefined;
     for (property of properties) {
-        hasAllProperties = hasAllProperties && (property in obj);
+        hasAllProperties = hasAllProperties && (key in obj);
     }
     return hasAllProperties;
 }
 
 const getMissingProperties = (obj, properties) => {
-    var missingProperties = [];
-    for (property of properties) {
-        if (!(property in obj)) {
-            missingProperties.push(property);
-        }
-    }
-    return missingProperties;
+    return properties.map((property) => {
+        return property in obj;
+    });
 }
 
 module.exports.checkProperties = checkProperties;
