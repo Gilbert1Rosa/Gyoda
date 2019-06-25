@@ -45,6 +45,9 @@ module.exports = class MockUserDAO {
                     }
                 }
             }
+            if (result.length <= 0) {
+                err = {errorCode: 3, message: 'User not found'};
+            }
             callback(err, result);
         });
     }

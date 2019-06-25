@@ -11,7 +11,7 @@ const getHandler = (req, res) => {
             message = err.message ? err.message : message;
             errorCode = err.errorCode ? err.errorCode : errorCode;
         }
-        var response = JSON.stringify(basicResponse(data, message, errorCode))
+        var response = JSON.stringify(basicResponse(data, message, errorCode, errorCode === ""))
         res.send(response); 
     };
 }

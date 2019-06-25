@@ -2,6 +2,7 @@ const ServiceHandler = require('../util/ServiceHandler');
 
 let path = '/user';
 let userDAO;
+let authService;
 
 /**
  *  The UserService function is intended to be a middleware
@@ -11,12 +12,13 @@ let userDAO;
  *  @param {*}       router           Express router
  *  @param {UserDAO} injectedUserDAO  Data provider for the users.
  */
-const UserService = (app, router, injectedUserDAO) => {
+const UserService = (app, router, injectedUserDAO, injectedAuthService) => {
     userDAO = injectedUserDAO;
-    router.post(path, searchUser);
-    router.patch(path, modifyUser);
-    router.put(path, app.oauth.authorise(), insertUser);
-    router.delete(path, app.oauth.authorise(), deleteUser);
+    authService = injectedAuthService;
+    router.post(path, authService.middleware, searchUser);
+    router.patch(path, authService.middleware, modifyUser);
+    router.put(path, authService.middleware, insertUser);
+    router.delete(path, authService.middleware, deleteUser);
     return router;
 }
 
