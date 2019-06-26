@@ -21,7 +21,7 @@ var userDAO = new MockUserDAO();
 var iterationDAO = new MockIterationDAO();
 
 var logger = (req, res, next) => {
-    console.log("Request received");
+    console.log(`Request received: ${req.path}`);
     next();
 };
 
@@ -29,7 +29,8 @@ var authService = AuthService(router, userDAO);
 
 app.use(cors({
     origin : [
-        "http://localhost:4200"
+        "http://localhost:4200",
+        "http://0.0.0.0:4200"
     ],
     credentials: true
 }));

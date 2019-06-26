@@ -10,7 +10,7 @@ const UserFactory = (usersJSON) => {
     var userData = JSON.parse(usersJSON);
     var users = [];
     for (let user of userData) {
-        users.push(new User(user.id, user.name, user.password, user.email, user.photo));
+        users.push(new User(user.id, user.name, user.surname, user.role, user.password, user.email, user.photo, user.skills.split(",")));
     }
     return users;
 }

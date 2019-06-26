@@ -4,13 +4,22 @@ const ERROR_CODES = require('../error/ErrorCodes');
 const ServiceHandler = require('../util/ServiceHandler');
 const JWT = require('jsonwebtoken');
 
+const secret = 'galletas';
+
 let middleware = (req, res, next) => {
-    next();
+    let token = req.header('Authorization');
+    JWT.verify(token, secret, (err, decoded) => {
+        if (!err) {
+            next();
+        } else {
+            res.send(JSON.stringify(BasicResponse(null, `Debe iniciar sesion para usar este request: ${err}`, ERROR_CODES.MUST_LOGIN, false)));
+        }
+    });
 }
 
 let createToken = (req, res, data) => {
     let tokenData = {name: data[0].name, password: data[0].password};
-    token = JWT.sign(tokenData, 'secret', {
+    token = JWT.sign(tokenData, secret, {
         expiresIn: 30 * 60
     });
     return token;
@@ -42,7 +51,7 @@ module.exports = (router, injectedUserDAO) => {
         }
     });
     router.post('/logout', (req, res) => {
-        console.log("Enter to logout");
+
     });
 
     return {

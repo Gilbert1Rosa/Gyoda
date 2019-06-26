@@ -5,7 +5,7 @@
  *  @param {string} message          Optional error message to be sent (empty if no error).
  *  @param {int}    errorCode        Optional error code to be sent (0 if no error).
  */
-module.exports = (data, message, errorCode, success = true) => {
+module.exports = (data, message, errorCode, success) => {
     return {
         data: data,
         message: message ? message : "",
