@@ -3,15 +3,15 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 /* DAOs */
-const MockIterationDAO = require('./data/mock-dao/MockIterationDAO');
-const MockUserDAO = require('./data/mock-dao/MockUserDAO');
+const MockIterationDAO = require('./src/data/mock-dao/MockIterationDAO');
+const MockUserDAO = require('./src/data/mock-dao/MockUserDAO');
 
 /* Services */
-const AuthService = require('./service/AuthService');
-const IterationService = require('./service/IterationService');
-const UserService = require('./service/UserService');
+const AuthService = require('./src/service/AuthService');
+const IterationService = require('./src/service/IterationService');
+const UserService = require('./src/service/UserService');
 
-const SessionManager = require('./util/SessionManager');
+const SessionManager = require('./src/util/SessionManager');
 
 /* Configurations */
 var app = express();

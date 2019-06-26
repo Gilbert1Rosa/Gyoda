@@ -58,7 +58,7 @@ const modifyUser = (req, res) => {
  * @param {*} res Response object.
  */
 const insertUser = (req, res) => {
-
+    console.log(`Inserting user ${JSON.stringify(req.body)}`);
 }
 
 /**
