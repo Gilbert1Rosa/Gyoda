@@ -3,7 +3,7 @@ const UserFactory = require('../../factory/UserFactory');
 
 module.exports = class MockUserDAO {
     constructor() {
-        this.file = './mock-data/Users.json';
+        this.file = './src/mock-data/Users.json';
     }
 
     loadUsers(callback) {

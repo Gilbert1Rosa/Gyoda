@@ -3,7 +3,7 @@ const IterationFactory = require('../../factory/IterationFactory');
 
 module.exports = class MockIterationDAO {
     constructor() {
-        this.file = './mock-data/Iteration.json';
+        this.file = './src/mock-data/Iteration.json';
     }
 
     loadIterations(callback) {
