@@ -1,4 +1,5 @@
 const ServiceHandler = require('../util/ServiceHandler');
+const CheckUtil = require('../util/CheckUtil');
 
 let path = '/user';
 let userDAO;
@@ -48,7 +49,12 @@ const searchUser = (req, res) => {
  * @param {*} res Response object.
  */
 const modifyUser = (req, res) => {
-
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['id', 'name', 'surname', 'password', 'photo', 'email', 'role', 'skills'])) {
+        userDAO.modifyUser(req.body, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo modificar el usuario: ${err}`, 2000, false)));
+    }
 }
 
 /**
@@ -58,7 +64,12 @@ const modifyUser = (req, res) => {
  * @param {*} res Response object.
  */
 const insertUser = (req, res) => {
-    console.log(`Inserting user ${JSON.stringify(req.body)}`);
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['id', 'name', 'surname', 'password', 'photo', 'email', 'role', 'skills'])) {
+        userDAO.addUser(req.body, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo agregar el usuario: ${err}`, 2001, false)));
+    }
 }
 
 /**
@@ -68,7 +79,12 @@ const insertUser = (req, res) => {
  * @param {*} res Response object.
  */
 const deleteUser = (req, res) => {
-
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['id'])) {
+        userDAO.deleteUser(req.body, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo eliminar el usuario: ${err}`, 2002, false)));
+    }
 }
 
 module.exports = UserService;

@@ -14,9 +14,13 @@ let connectionOptions
 
 async function execute(connection, command, params, callback) {
     let result = null;
-    if (connection) {
-        result = await connection.execute(command, params);
-        callback(result);
+    try {
+        if (connection) {
+            result = await connection.execute(command, params);
+            callback(null, result);
+        }
+    } catch(err) {
+        callback(err, null);
     }
 }
 

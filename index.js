@@ -37,6 +37,11 @@ async function initServer() {
         next();
     };
 
+    var defaults = (req, res, next) => {
+        res.type('json');
+        next();
+    };
+
     Process.on('exit', () => {
         console.log('Bye');
         OracleConnection.close();
@@ -45,16 +50,14 @@ async function initServer() {
     var authService = AuthService(router, userDAO);
 
     SessionManager(app, userDAO); // This should go first
-    app.use(logger);
+    app.use(logger, defaults);
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: true}));
 
     var userService = UserService(app, router, userDAO, authService);
     var iterationService = IterationService(app, router, iterationDAO);
 
-    app.use('/gyoda/api', userService);
-    app.use('/gyoda/api', iterationService);
-    app.use('/gyoda/api', authService.routes);
+    app.use('/gyoda/api', userService, iterationService, authService.routes);
     app.listen(5000);
 }
 

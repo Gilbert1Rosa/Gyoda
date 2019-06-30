@@ -3,29 +3,30 @@ const Mapper = require('../../util/oracle/OracleMapper');
 const OracleConnection = require('../../util/oracle/OracleConnection');
 
 let userField = [{
-    name: 'ID',
-    objName: 'id'
-},
-{
-    name: 'NOMBRE',
-    objName: 'name'
-},
-{
-    name: 'APELLIDO',
-    objName: 'surname'
-},
-{
-    name: 'CLAVE',
-    objName: 'password'
-},
-{
-    name:'EMAIL',
-    objName: 'email'
-},
-{
-    name: 'ROL',
-    objName: 'role'
-}];
+        name: 'ID',
+        objName: 'id'
+    },
+    {
+        name: 'NOMBRE',
+        objName: 'name'
+    },
+    {
+        name: 'APELLIDO',
+        objName: 'surname'
+    },
+    {
+        name: 'CLAVE',
+        objName: 'password'
+    },
+    {
+        name:'EMAIL',
+        objName: 'email'
+    },
+    {
+        name: 'ROL',
+        objName: 'role'
+    }
+];
 
 module.exports = class UserDAO {
 
@@ -36,12 +37,17 @@ module.exports = class UserDAO {
     loadUsers(query, callback) {
         let finalQuery = query && query !== ''? query : `SELECT * FROM vUsuarios`;
         try {
-            OracleConnection.executeQuery(this.connection, finalQuery, [], data => {
-                let mappedData = Mapper.getDifferentRowsAsObjs(data, userField, 'id');
-                mappedData.forEach(user => {
-                    user.skills = this.getUserSkills(data, user);
-                });
-                callback(null, mappedData);
+            OracleConnection.executeQuery(this.connection, finalQuery, [], (err, data) => {
+                if (err) { 
+                    let customError = { message: `Error: ${err}`, errorCode: 1002 };
+                    callback(customError, null);
+                } else {
+                    let mappedData = Mapper.getDifferentRowsAsObjs(data, userField, 'id');
+                    mappedData.forEach(user => {
+                        user.skills = this.getUserSkills(data, user);
+                    });
+                    callback(null, mappedData);
+                }
             });
         } catch(err) {
             let customError = { message: `Error: ${err}`, errorCode: 1000 };
@@ -63,6 +69,48 @@ module.exports = class UserDAO {
 
     findUsersByName(name, callback) {
         this.loadUsers(`SELECT * FROM vUsuarios WHERE nombre LIKE '${name}%'`, callback);
+    }
+
+    addUser(user, callback) {
+        let mappedUser = {};
+        let command = `CALL CREATE_USER(:id, :name, :surname, :password, :photo, :email, :role, :skills)`;
+        Object.assign(mappedUser, user);
+        mappedUser.photo = Buffer.from(user.photo);
+        OracleConnection.execute(this.connection, command, mappedUser, (err, data) => {
+            if (err) { 
+                let customError = { message: `Error: ${err}`, errorCode: 1001 };
+                callback(customError, null);
+            } else {
+                callback(null, data);
+            }
+        });
+    }
+
+    modifyUser(user, callback) {
+        let mappedUser = {};
+        let command = `CALL MODIFY_USER(:id, :name, :surname, :password, :photo, :email, :role, :skills)`;
+        Object.assign(mappedUser, user);
+        mappedUser.photo = Buffer.from(user.photo);
+        OracleConnection.execute(this.connection, command, mappedUser, (err, data) => {
+            if (err) { 
+                let customError = { message: `Error: ${err}`, errorCode: 1002 };
+                callback(customError, null);
+            } else {
+                callback(null, data);
+            }
+        });
+    }
+
+    deleteUser(id, callback) {
+        let command = `CALL DELETE_USER(${id})`;
+        OracleConnection.execute(this.connection, command, [], (err, data) => {
+            if (err) { 
+                let customError = { message: `Error: ${err}`, errorCode: 1002 };
+                callback(customError, null);
+            } else {
+                callback(null, data);
+            }
+        });
     }
 
     getUserSkills(data, user) {
