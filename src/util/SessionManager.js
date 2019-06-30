@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session')
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
+const cors = require('cors');
 
 let userDAO;
 
@@ -19,5 +20,12 @@ module.exports = (app, injectedUserDAO) => {
         resave: false,
         saveUninitialized: true,
         store: new MongoStore({ mongooseConnection: db})
+    }));
+    app.use(cors({
+        origin : [
+            "http://localhost:4200",
+            "http://0.0.0.0:4200"
+        ],
+        credentials: true
     }));
 }

@@ -1,48 +1,61 @@
 var express = require('express')
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const Process = require('process');
 
 /* DAOs */
 const MockIterationDAO = require('./src/data/mock-dao/MockIterationDAO');
 const MockUserDAO = require('./src/data/mock-dao/MockUserDAO');
+const UserDAO = require('./src/data/dao/UserDAO');
 
 /* Services */
 const AuthService = require('./src/service/AuthService');
 const IterationService = require('./src/service/IterationService');
 const UserService = require('./src/service/UserService');
 
+/* Util */
 const SessionManager = require('./src/util/SessionManager');
+const OracleConnection = require('./src/util/oracle/OracleConnection');
+const Mapper = require('./src/util/oracle/OracleMapper');
 
 /* Configurations */
 var app = express();
 var router = express.Router();
 
-var userDAO = new MockUserDAO();
-var iterationDAO = new MockIterationDAO();
+async function initServer() {
+    let connection = await OracleConnection.connect({
+        user: 'GyodaDba',
+        password: 'password',
+        connectString: 'localhost/xe'
+    });
 
-var logger = (req, res, next) => {
-    console.log(`Request received: ${req.path}`);
-    next();
-};
+    //var userDAO = new MockUserDAO();
+    var iterationDAO = new MockIterationDAO();
+    var userDAO = new UserDAO(connection);
 
-var authService = AuthService(router, userDAO);
+    var logger = (req, res, next) => {
+        console.log(`Request received: ${req.path}`);
+        next();
+    };
 
-app.use(cors({
-    origin : [
-        "http://localhost:4200",
-        "http://0.0.0.0:4200"
-    ],
-    credentials: true
-}));
-SessionManager(app, userDAO); // This should go first
-app.use(logger);
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+    Process.on('exit', () => {
+        console.log('Bye');
+        OracleConnection.close();
+    });
 
-var userService = UserService(app, router, userDAO, authService);
-var iterationService = IterationService(app, router, iterationDAO);
+    var authService = AuthService(router, userDAO);
 
-app.use('/gyoda/api', userService);
-app.use('/gyoda/api', iterationService);
-app.use('/gyoda/api', authService.routes);
-app.listen(5000);
+    SessionManager(app, userDAO); // This should go first
+    app.use(logger);
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({extended: true}));
+
+    var userService = UserService(app, router, userDAO, authService);
+    var iterationService = IterationService(app, router, iterationDAO);
+
+    app.use('/gyoda/api', userService);
+    app.use('/gyoda/api', iterationService);
+    app.use('/gyoda/api', authService.routes);
+    app.listen(5000);
+}
+
+initServer();
