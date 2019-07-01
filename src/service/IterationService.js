@@ -59,7 +59,12 @@ const ModifyIteration = (req, res) => {
  * @param {*} res Response object.
  */
 const InsertIteration = (req, res) => {
-    // TODO: Make project inserting logic here
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['projectid', 'name', 'startDate', 'endDate'])) {
+        iterationDAO.addIteration(req.body, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo agregar el usuario: ${err}`, 2001, false)));
+    }
 }
 
 /**

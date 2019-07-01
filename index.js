@@ -28,7 +28,6 @@ async function initServer() {
         connectString: 'localhost/xe'
     });
 
-    //var userDAO = new MockUserDAO();
     var iterationDAO = new MockIterationDAO();
     var userDAO = new UserDAO(connection);
 
