@@ -12,11 +12,11 @@ let connectionOptions
     return connection;
 }
 
-async function execute(connection, command, params, callback) {
+async function execute(connection, command, params, options, callback) {
     let result = null;
     try {
         if (connection) {
-            result = await connection.execute(command, params);
+            result = await connection.execute(command, params, options);
             callback(null, result);
         }
     } catch(err) {
@@ -24,8 +24,8 @@ async function execute(connection, command, params, callback) {
     }
 }
 
-async function executeQuery(connection, query, params, callback) {
-    execute(connection, query, params, callback);
+async function executeQuery(connection, query, params, options, callback) {
+    execute(connection, query, params, options, callback);
 }
 
 async function close(connection) {

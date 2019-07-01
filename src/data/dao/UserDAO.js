@@ -1,6 +1,7 @@
 const UserFactory = require('../../factory/UserFactory');
 const Mapper = require('../../util/oracle/OracleMapper');
 const OracleConnection = require('../../util/oracle/OracleConnection');
+const Oracle = require('oracledb');
 
 let userField = [{
         name: 'ID',
@@ -23,6 +24,10 @@ let userField = [{
         objName: 'email'
     },
     {
+        name: 'FOTO',
+        objName: 'photo'
+    },
+    {
         name: 'ROL',
         objName: 'role'
     }
@@ -37,13 +42,14 @@ module.exports = class UserDAO {
     loadUsers(query, callback) {
         let finalQuery = query && query !== ''? query : `SELECT * FROM vUsuarios`;
         try {
-            OracleConnection.executeQuery(this.connection, finalQuery, [], (err, data) => {
+            OracleConnection.executeQuery(this.connection, finalQuery, [], {fetchInfo: {"FOTO": {type: Oracle.BUFFER}}}, (err, data) => {
                 if (err) { 
                     let customError = { message: `Error: ${err}`, errorCode: 1002 };
                     callback(customError, null);
                 } else {
                     let mappedData = Mapper.getDifferentRowsAsObjs(data, userField, 'id');
                     mappedData.forEach(user => {
+                        user.photo = user.photo? user.photo.toString() : user.photo;
                         user.skills = this.getUserSkills(data, user);
                     });
                     callback(null, mappedData);
@@ -71,14 +77,35 @@ module.exports = class UserDAO {
         this.loadUsers(`SELECT * FROM vUsuarios WHERE nombre LIKE '${name}%'`, callback);
     }
 
+    findUserNames(name, callback) {
+        let query = `SELECT DISTINCT nombre || ' ' || apellido as nombre_completo FROM vUsuarios WHERE nombre LIKE '${name}%'`;
+        try {
+            OracleConnection.executeQuery(this.connection, query, [], {}, (err, data) => {
+                let userNames = [];
+                if (err) {
+                    let customError = { message: `Error: ${err}`, errorCode: 1002 };
+                    callback(customError, null);
+                } else {
+                    data.rows.forEach(row => {
+                        userNames.push(row[0]);
+                    });
+                    callback(null, userNames);
+                }
+            });
+        } catch(err) {
+            let customError = { message: `Error: ${err}`, errorCode: 1000 };
+            callback(customError, null);
+        }
+    }
+
     addUser(user, callback) {
         let mappedUser = {};
         let command = `CALL CREATE_USER(:id, :name, :surname, :password, :photo, :email, :role, :skills)`;
         Object.assign(mappedUser, user);
         mappedUser.photo = Buffer.from(user.photo);
-        OracleConnection.execute(this.connection, command, mappedUser, (err, data) => {
+        OracleConnection.execute(this.connection, command, mappedUser, {}, (err, data) => {
             if (err) { 
-                let customError = { message: `Error: ${err}`, errorCode: 1001 };
+                let customError = { message: `Error: ${err}`, errorCode: 1002 };
                 callback(customError, null);
             } else {
                 callback(null, data);
@@ -91,7 +118,7 @@ module.exports = class UserDAO {
         let command = `CALL MODIFY_USER(:id, :name, :surname, :password, :photo, :email, :role, :skills)`;
         Object.assign(mappedUser, user);
         mappedUser.photo = Buffer.from(user.photo);
-        OracleConnection.execute(this.connection, command, mappedUser, (err, data) => {
+        OracleConnection.execute(this.connection, command, mappedUser, {}, (err, data) => {
             if (err) { 
                 let customError = { message: `Error: ${err}`, errorCode: 1002 };
                 callback(customError, null);
@@ -103,7 +130,7 @@ module.exports = class UserDAO {
 
     deleteUser(id, callback) {
         let command = `CALL DELETE_USER(${id})`;
-        OracleConnection.execute(this.connection, command, [], (err, data) => {
+        OracleConnection.execute(this.connection, command, [], {}, (err, data) => {
             if (err) { 
                 let customError = { message: `Error: ${err}`, errorCode: 1002 };
                 callback(customError, null);

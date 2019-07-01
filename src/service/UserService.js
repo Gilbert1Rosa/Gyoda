@@ -31,12 +31,12 @@ const UserService = (app, router, injectedUserDAO, injectedAuthService) => {
  */
 const searchUser = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
-    var id = null;
-    if (req.body) {
-        id = req.body.id;
-    }
-    if (id) {
-        userDAO.getUserById(id, serviceHandler);
+    if (CheckUtil.checkProperties(req.body, ['id'])) {
+        userDAO.getUserById(req.body.id, serviceHandler);
+    } else if (CheckUtil.checkProperties(req.body, ['name', 'only-names'])) {
+        userDAO.findUserNames(req.body.name, serviceHandler);
+    } else if (CheckUtil.checkProperties(req.body, ['name'])) {
+        userDAO.findUsersByName(req.body.name, serviceHandler);
     } else {
         userDAO.getUsers(serviceHandler);
     }
