@@ -13,10 +13,10 @@ let projectDAO;
  */
 const ProjectService = (app, router, injectedProjectDAO) => {
     projectDAO = injectedProjectDAO;   
-    router.post(path, app.oauth.authorise(), SearchProject);
-    router.patch(path, app.oauth.authorise(), ModifyProject);
-    router.put(path, app.oauth.authorise(), InsertProject);
-    router.delete(path, app.oauth.authorise(), DeleteProject);
+    router.post(path, SearchProject);
+    router.patch(path, ModifyProject);
+    router.put(path, InsertProject);
+    router.delete(path, DeleteProject);
     return router;
 }
 

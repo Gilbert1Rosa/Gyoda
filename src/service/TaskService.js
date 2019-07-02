@@ -13,10 +13,10 @@ let taskDAO;
  */
 const TaskService = (app, router, injectedTaskDAO) => {
     taskDAO = injectedTaskDAO;
-    router.post(path, app.oauth.authorise(), SearchTask);
-    router.patch(path, app.oauth.authorise(), ModifyTask);
-    router.put(path, app.oauth.authorise(), InsertTask);
-    router.delete(path, app.oauth.authorise(), DeleteTask);
+    router.post(path, SearchTask);
+    router.patch(path, ModifyTask);
+    router.put(path, InsertTask);
+    router.delete(path, DeleteTask);
     return router;
 }
 
