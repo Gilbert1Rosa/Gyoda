@@ -1,4 +1,6 @@
 const ServiceHandler = require('../util/ServiceHandler');
+const CheckUtil = require('../util/CheckUtil');
+
 
 let path = '/project';
 let projectDAO;
@@ -27,9 +29,8 @@ const ProjectService = (app, router, injectedProjectDAO) => {
  * @param {*} res Response object.
  */
 const SearchProject = (req, res) => {
-    var project = null;
     const serviceHandler = ServiceHandler(req, res);
-    // TODO: Make project fetching logic here
+    projectDAO.getProjects(serviceHandler);
 }
 
 /**
@@ -39,7 +40,10 @@ const SearchProject = (req, res) => {
  * @param {*} res Response object.
  */
 const ModifyProject = (req, res) => {
-
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['id', 'title', 'description'])) {
+        projectDAO.modifyProject(req.body, serviceHandler);
+    }
 }
 
 /**
@@ -49,7 +53,10 @@ const ModifyProject = (req, res) => {
  * @param {*} res Response object.
  */
 const InsertProject = (req, res) => {
-    // TODO: Make project inserting logic here
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['title', 'description'])) {
+        projectDAO.addProject(req.body, serviceHandler);
+    }
 }
 
 /**
@@ -59,7 +66,10 @@ const InsertProject = (req, res) => {
  * @param {*} res Response object.
  */
 const DeleteProject = (req, res) => {
-    // TODO: Make project deleting logic here
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['id'])) {
+        projectDAO.deleteProject(req.body.id, serviceHandler);
+    }
 }
 
 module.exports = ProjectService;

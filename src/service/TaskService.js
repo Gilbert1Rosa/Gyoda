@@ -1,4 +1,5 @@
 const ServiceHandler = require('../util/ServiceHandler');
+const CheckUtil = require('../util/CheckUtil');
 
 let path = '/task';
 let taskDAO;
@@ -28,6 +29,9 @@ const TaskService = (app, router, injectedTaskDAO) => {
  */
 const SearchTask = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['iterationid'])) {
+        taskDAO.getTasks(req.body.iterationid, serviceHandler);
+    }
 }
 
 /**
@@ -37,7 +41,11 @@ const SearchTask = (req, res) => {
  * @param {*} res Response object.
  */
 const ModifyTask = (req, res) => {
-
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['id', 'code', 'title', 'description', 'iterationid', 
+                                             'asignee', 'reporter', 'stateid', 'tags'])) {
+        taskDAO.modifyTask(req.body, serviceHandler);
+    }
 }
 
 /**
@@ -47,7 +55,11 @@ const ModifyTask = (req, res) => {
  * @param {*} res Response object.
  */
 const InsertTask = (req, res) => {
-
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['code', 'title', 'description', 'iditeration', 
+                                             'asignee', 'reporter', 'stateid', 'tags'])) {
+        taskDAO.addTask(req.body, serviceHandler);
+    }
 }
 
 /**
@@ -57,7 +69,10 @@ const InsertTask = (req, res) => {
  * @param {*} res Response object.
  */
 const DeleteTask = (req, res) => {
-
+    const serviceHandler = ServiceHandler(req, res);
+    if (CheckUtil.checkProperties(req.body, ['id'])) {
+        taskDAO.deleteTask(req.body.id, serviceHandler);
+    }
 }
 
 module.exports = TaskService;

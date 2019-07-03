@@ -4,7 +4,7 @@ const OracleConnection = require('../../util/oracle/OracleConnection');
 const fields = [
     {
         name: 'ID',
-        objName: 'name'
+        objName: 'id'
     },    
     {
         name: 'TITULO',
@@ -17,6 +17,11 @@ const fields = [
 ];
 
 module.exports = class ProjectDAO {
+
+    constructor(connection) {
+        this.connection = connection;
+    }
+
     getProjects(callback) {
         let query = `SELECT * FROM vProyectos`;
         OracleConnection.execute(this.connection, query, {}, {}, (err, data) => {
@@ -27,7 +32,7 @@ module.exports = class ProjectDAO {
                 let mappedData = Mapper.getRowsAsObjs(data, fields);
                 callback(null, mappedData);
             }
-        })
+        });
     }
 
     addProject(project, callback) {

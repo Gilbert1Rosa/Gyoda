@@ -1,6 +1,5 @@
 const Mapper = require('../../util/oracle/OracleMapper');
 const OracleConnection = require('../../util/oracle/OracleConnection');
-const Oracle = require('oracledb');
 const moment = require('moment');
 
 const fields = [
@@ -23,6 +22,11 @@ const fields = [
 ];
 
 module.exports = class IterationDAO {
+
+    constructor(connection) {
+        this.connection = connection;
+    }
+    
     getIterationsByProject(project, callback) {
         let finalQuery = `SELECT * FROM vIteraciones WHERE proyecto = :project`;
         let fields = { project: project };

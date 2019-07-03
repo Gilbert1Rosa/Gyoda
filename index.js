@@ -3,9 +3,12 @@ const bodyParser = require('body-parser');
 const Process = require('process');
 
 /* DAOs */
-const MockIterationDAO = require('./src/data/mock-dao/MockIterationDAO');
-const MockUserDAO = require('./src/data/mock-dao/MockUserDAO');
+//const MockIterationDAO = require('./src/data/mock-dao/MockIterationDAO');
+//const MockUserDAO = require('./src/data/mock-dao/MockUserDAO');
 const UserDAO = require('./src/data/dao/UserDAO');
+const ProjectDAO = require('./src/data/dao/projectDAO');
+const IterationDAO = require('./src/data/dao/IterationDAO');
+const TaskDAO = require('./src/data/dao/TaskDAO');
 
 /* Services */
 const AuthService = require('./src/service/AuthService');
@@ -26,11 +29,15 @@ async function initServer() {
     let connection = await OracleConnection.connect({
         user: 'GyodaDba',
         password: 'password',
-        connectString: 'gyodadb.cb277e4k1thw.us-east-2.rds.amazonaws.com/orcl'
+        connectString: 'localhost/xe'
+        //connectString: 'gyodadb.cb277e4k1thw.us-east-2.rds.amazonaws.com/orcl'
     });
 
-    var iterationDAO = new MockIterationDAO();
+    var iterationDAO = new IterationDAO(connection);
     var userDAO = new UserDAO(connection);
+    var projectDAO = new ProjectDAO(connection);
+    var taskDAO = new TaskDAO(connection);
+
 
     var logger = (req, res, next) => {
         console.log(`Request received: ${req.path}`);
@@ -56,8 +63,8 @@ async function initServer() {
 
     var userService = UserService(app, router, userDAO, authService);
     var iterationService = IterationService(app, router, iterationDAO);
-    var projectService = ProjectService(app, router, {});
-    var taskService = TaskService(app, router, {});
+    var projectService = ProjectService(app, router, projectDAO);
+    var taskService = TaskService(app, router, taskDAO);
 
     app.use('/gyoda/api', userService, iterationService, projectService, taskService, authService.routes);
     app.listen(5000);
