@@ -1,7 +1,7 @@
 const Mapper = require('../../util/oracle/OracleMapper');
 const OracleConnection = require('../../util/oracle/OracleConnection');
 
-const fields = [
+const TASK_FIELDS = [
     {
         name: 'ID',
         objName: 'id'
@@ -23,15 +23,23 @@ const fields = [
         objName: 'iterationid'
     },
     {
-        name: 'ASIGNADO',
-        objName: 'asignee'
-    },
-    { 
-        name: 'REPORTADO',
-        objName: 'reporter'
+        name: 'NOMBRE_ASIGNADO',
+        objName: 'asigneeName'
     },
     {
-        name: 'Estado',
+        name: 'APELLIDO_ASIGNADO',
+        objName: 'asigneeSurname'
+    },
+    { 
+        name: 'NOMBRE_REPORTADO',
+        objName: 'reporterName'
+    },
+    { 
+        name: 'APELLIDO_REPORTADO',
+        objName: 'reporterSurname'
+    },
+    {
+        name: 'ESTADO',
         objName: 'state'
     },
     { 
@@ -40,8 +48,6 @@ const fields = [
     }
 ];
 
-
-
 module.exports = class TaskDAO {
 
     constructor(connection) {
@@ -49,14 +55,35 @@ module.exports = class TaskDAO {
     }
     
     getTasks(iteration, callback) {
-        let query = `SELECT * vTareas WHERE iditeracion = :id`;
+        let query = `SELECT * FROM vTareas WHERE iditeracion = :id`;
         OracleConnection.execute(this.connection, query, { id: iteration }, {}, (err, data) => {
             if (err) { 
-                let customError = { message: `Error: ${err}`, errorCode: 2002 };
+                let customError = { message: `Error: ${err}`, errorCode: 4001 };
                 callback(customError, null);
             } else {
-                let mappedData = Mapper.getRowsAsObjs(data, fields);
-                callback(null, mappedData);
+                let mappedTasks = Mapper.getRowsAsObjs(data, TASK_FIELDS);
+                this.getStates((err, states) => {
+                    if (err) {
+                        let customError = { message: `Error: ${err}`, errorCode: 4001 };
+                        callback(customError, null);
+                    } else {
+                        let users = Mapper.getRowsAsObjs(data, [
+                            {
+                                name: 'NOMBRE_ASIGNADO',
+                                objName: 'asigneeName'
+                            },
+                            {
+                                name: 'APELLIDO_ASIGNADO',
+                                objName: 'asigneeSurname'
+                            }
+                        ]).map(item => `${item.asigneeName} ${item.asigneeSurname}`);
+                        callback(null, {
+                            users: users,
+                            tasks: mappedTasks,
+                            states: states
+                        });
+                    }
+                });
             }
         });
     }
@@ -65,7 +92,7 @@ module.exports = class TaskDAO {
         let command = `CALL CREATE_TASK(:code, :title, :description, :iditeration, :asignee, :reporter, :stateid, :tags)`;
         OracleConnection.execute(this.connection, command, task, {}, (err, data) => {
             if (err) { 
-                let customError = { message: `Error: ${err}`, errorCode: 2002 };
+                let customError = { message: `Error: ${err}`, errorCode: 4002 };
                 callback(customError, null);
             } else {
                 callback(null, data);
@@ -77,7 +104,7 @@ module.exports = class TaskDAO {
         let command = `CALL MODFIY_TASK(:id, :code, :title, :description, :iditeration, :asignee, :reporter, :stateid, :tags)`;
         OracleConnection.execute(this.connection, command, task, {}, (err, data) => {
             if (err) { 
-                let customError = { message: `Error: ${err}`, errorCode: 2002 };
+                let customError = { message: `Error: ${err}`, errorCode: 4003 };
                 callback(customError, null);
             } else {
                 callback(null, data);
@@ -89,10 +116,23 @@ module.exports = class TaskDAO {
         let command = `CALL DELETE_TASK(:id)`;
         OracleConnection.execute(this.connection, command, { id: taskId }, {}, (err, data) => {
             if (err) { 
-                let customError = { message: `Error: ${err}`, errorCode: 2002 };
+                let customError = { message: `Error: ${err}`, errorCode: 4004 };
                 callback(customError, null);
             } else {
                 callback(null, data);
+            }
+        });
+    }
+
+    getStates(callback) {
+        let command = `SELECT * FROM Estados`;
+        OracleConnection.execute(this.connection, command, {}, {}, (err, data) => {
+            if (err) { 
+                let customError = { message: `Error: ${err}`, errorCode: 4005 };
+                callback(customError, null);
+            } else {
+                let mappedData = Mapper.getFieldForAllRows(data, 'DESCRIPCION');
+                callback(null, mappedData);
             }
         });
     }

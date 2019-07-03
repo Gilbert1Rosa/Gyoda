@@ -1,15 +1,4 @@
-function getFieldPosition(data, field) {
-    let fieldDescs = data.metaData;
-    let index = 0;
-    for (let fieldDesc of fieldDescs) {
-        if (fieldDesc.name !== field) {
-            index += 1;
-        } else {
-            break;
-        }
-    }
-    return index;
-}
+const getFieldPosition = (data, field) => data.metaData.findIndex(fieldDesc => fieldDesc.name === field);
 
 function findByKey(objArray, fieldName, fieldValue) {
     return objArray.some(obj => {
@@ -61,7 +50,7 @@ module.exports.getAnyFieldValueForKey = (data, field, keyField, keyValue) => {
 
 module.exports.getFieldForAllRows = (data, fieldName) => {
     let values = [];
-    let fieldIndex = this.getFieldPosition(data, fieldName);
+    let fieldIndex = getFieldPosition(data, fieldName);
     if (fieldIndex) {
         for (var row of data.rows) {
             values.push(row[fieldIndex]);
