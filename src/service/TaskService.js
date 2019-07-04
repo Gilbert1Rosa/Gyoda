@@ -1,5 +1,6 @@
 const ServiceHandler = require('../util/ServiceHandler');
 const CheckUtil = require('../util/CheckUtil');
+const BasicResponse = require('../util/BasicResponse');
 
 let path = '/task';
 let taskDAO;
@@ -31,6 +32,8 @@ const SearchTask = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
     if (CheckUtil.checkProperties(req.body, ['iterationid'])) {
         taskDAO.getTasks(req.body.iterationid, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo obtener las tareas: faltan parametros`, 2000, false)));
     }
 }
 
@@ -45,6 +48,8 @@ const ModifyTask = (req, res) => {
     if (CheckUtil.checkProperties(req.body, ['id', 'code', 'title', 'description', 'iterationid', 
                                              'asignee', 'reporter', 'stateid', 'tags'])) {
         taskDAO.modifyTask(req.body, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo modificar la tarea: faltan parametros`, 2000, false)));
     }
 }
 
@@ -59,6 +64,8 @@ const InsertTask = (req, res) => {
     if (CheckUtil.checkProperties(req.body, ['code', 'title', 'description', 'iditeration', 
                                              'asignee', 'reporter', 'stateid', 'tags'])) {
         taskDAO.addTask(req.body, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo agregar la tarea: faltan parametros`, 2000, false)));
     }
 }
 
@@ -72,6 +79,8 @@ const DeleteTask = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
     if (CheckUtil.checkProperties(req.body, ['id'])) {
         taskDAO.deleteTask(req.body.id, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo eliminar la tarea: faltan parametros`, 2000, false)));
     }
 }
 

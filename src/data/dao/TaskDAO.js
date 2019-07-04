@@ -64,7 +64,7 @@ module.exports = class TaskDAO {
                 let mappedTasks = Mapper.getRowsAsObjs(data, TASK_FIELDS);
                 this.getStates((err, states) => {
                     if (err) {
-                        let customError = { message: `Error: ${err}`, errorCode: 4001 };
+                        let customError = { message: `Error: ${err.message}`, errorCode: err.errorCode };
                         callback(customError, null);
                     } else {
                         let users = Mapper.getRowsAsObjs(data, [
@@ -77,6 +77,7 @@ module.exports = class TaskDAO {
                                 objName: 'asigneeSurname'
                             }
                         ]).map(item => `${item.asigneeName} ${item.asigneeSurname}`);
+                        mappedTasks.forEach(mappedTask => mappedTask.tags = mappedTask? this.mapTaskTags(mappedTask.tags) : mappedTask.tags);
                         callback(null, {
                             users: users,
                             tasks: mappedTasks,
@@ -135,5 +136,12 @@ module.exports = class TaskDAO {
                 callback(null, mappedData);
             }
         });
+    }
+
+    mapTaskTags(tags) {
+        return tags.split(",").map(item => {
+            let parts = item.split("|");
+            return { name: parts[0], color: parts[1] };
+        })
     }
 }

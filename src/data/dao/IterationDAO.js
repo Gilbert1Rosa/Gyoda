@@ -2,7 +2,11 @@ const Mapper = require('../../util/oracle/OracleMapper');
 const OracleConnection = require('../../util/oracle/OracleConnection');
 const moment = require('moment');
 
-const fields = [
+const ITERATION_FIELDS = [
+    {
+        name: 'ID',
+        objName: 'id'
+    },
     {
         name: 'NOMBRE',
         objName: 'name'
@@ -35,7 +39,7 @@ module.exports = class IterationDAO {
                 let customError = { message: `Error: ${err}`, errorCode: 1002 };
                 callback(customError, null);
             } else {
-                let mappedData = Mapper.getRowsAsObjs(data, fields);
+                let mappedData = Mapper.getRowsAsObjs(data, ITERATION_FIELDS);
                 callback(null, mappedData);
             }
         });
