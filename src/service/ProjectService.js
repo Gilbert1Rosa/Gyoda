@@ -1,5 +1,6 @@
 const ServiceHandler = require('../util/ServiceHandler');
 const CheckUtil = require('../util/CheckUtil');
+const BasicResponse = require('../util/BasicResponse');
 
 
 let path = '/project';
@@ -43,6 +44,8 @@ const ModifyProject = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
     if (CheckUtil.checkProperties(req.body, ['id', 'title', 'description'])) {
         projectDAO.modifyProject(req.body, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo modificar el proyecto: faltan parametros`, 2000, false)));
     }
 }
 
@@ -56,6 +59,8 @@ const InsertProject = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
     if (CheckUtil.checkProperties(req.body, ['title', 'description'])) {
         projectDAO.addProject(req.body, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo agregar el proyecto: faltan parametros`, 2000, false)));
     }
 }
 
@@ -67,8 +72,10 @@ const InsertProject = (req, res) => {
  */
 const DeleteProject = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
-    if (CheckUtil.checkProperties(req.body, ['id'])) {
-        projectDAO.deleteProject(req.body.id, serviceHandler);
+    if (CheckUtil.checkProperties(req.query, ['id'])) {
+        projectDAO.deleteProject(req.query.id, serviceHandler);
+    } else {
+        res.send(JSON.stringify(BasicResponse(null, `No se pudo eliminar el proyecto: faltan parametros`, 2000, false)));
     }
 }
 

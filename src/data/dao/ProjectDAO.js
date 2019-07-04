@@ -50,7 +50,7 @@ module.exports = class ProjectDAO {
     modifyProject(project, callback) {
         let command = `CALL MODIFY_PROJECT(:id, :title, :description)`;
         OracleConnection.execute(this.connection, command, project, {}, (err, data) => {
-            if (err) { 
+            if (err) {
                 let customError = { message: `Error: ${err}`, errorCode: 2002 };
                 callback(customError, null);
             } else {
@@ -60,7 +60,7 @@ module.exports = class ProjectDAO {
     }
 
     deleteProject(projectid, callback) {
-        let command = `CALL DELETE_USER(${projectid})`;
+        let command = `CALL DELETE_PROJECT(${projectid})`;
         OracleConnection.execute(this.connection, command, [], {}, (err, data) => {
             if (err) { 
                 let customError = { message: `Error: ${err}`, errorCode: 2002 };
