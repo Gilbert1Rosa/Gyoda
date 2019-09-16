@@ -30,7 +30,7 @@ async function initServer() {
         user: 'GyodaDba',
         password: 'password',
         connectString: 'localhost/xe'
-        //connectString: 'gyodadb.cb277e4k1thw.us-east-2.rds.amazonaws.com/orcl'
+        //connectString: 'gyodadb.cb277e4k1thw.us-east-2.rds.amazonaws.com:1521/orcl'
     });
 
     var iterationDAO = new IterationDAO(connection);
@@ -49,10 +49,13 @@ async function initServer() {
         next();
     };
 
-    Process.on('exit', () => {
+    var exitAction = () => {
         console.log('Bye');
-        OracleConnection.close();
-    });
+        OracleConnection.close();        
+    }
+
+    Process.on('exit', exitAction);
+    Process.on('SIGINT', exitAction);
 
     var authService = AuthService(router, userDAO);
 
@@ -67,7 +70,7 @@ async function initServer() {
     var taskService = TaskService(app, router, taskDAO);
 
     app.use('/gyoda/api', userService, iterationService, projectService, taskService, authService.routes);
-    app.listen(5000);
+    app.listen(3000);
 }
 
 initServer();

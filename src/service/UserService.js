@@ -80,8 +80,8 @@ const insertUser = (req, res) => {
  */
 const deleteUser = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
-    if (CheckUtil.checkProperties(req.body, ['id'])) {
-        userDAO.deleteUser(req.body, serviceHandler);
+    if (CheckUtil.checkProperties(req.query, ['id'])) {
+        userDAO.deleteUser(req.query.id, serviceHandler);
     } else {
         res.send(JSON.stringify(BasicResponse(null, `No se pudo eliminar el usuario: ${err}`, 2002, false)));
     }

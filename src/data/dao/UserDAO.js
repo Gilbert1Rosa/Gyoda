@@ -129,6 +129,7 @@ module.exports = class UserDAO {
     }
 
     deleteUser(id, callback) {
+        console.log(id);
         let command = `CALL DELETE_USER(${id})`;
         OracleConnection.execute(this.connection, command, [], {}, (err, data) => {
             if (err) { 

@@ -18,6 +18,9 @@ async function execute(connection, command, params, options, callback) {
         if (connection) {
             result = await connection.execute(command, params, options);
             callback(null, result);
+        } else {
+            callback({ message: "Error de conexion con la base de datos",
+                       errorCode: 5000 }, null);
         }
     } catch(err) {
         callback(err, null);
@@ -30,7 +33,9 @@ async function executeQuery(connection, query, params, options, callback) {
 
 async function close(connection) {
     try {
-        await connection.close();
+        if (connection) {
+            await connection.close();
+        }
     } catch(err2) {
         console.log(err2);
     }
