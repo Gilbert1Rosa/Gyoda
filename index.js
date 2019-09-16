@@ -29,7 +29,7 @@ async function initServer() {
     let connection = await OracleConnection.connect({
         user: 'GyodaDba',
         password: 'password',
-        connectString: 'localhost/xe'
+        connectString: 'localhost:1521/orcl'
         //connectString: 'gyodadb.cb277e4k1thw.us-east-2.rds.amazonaws.com:1521/orcl'
     });
 
@@ -55,7 +55,6 @@ async function initServer() {
     }
 
     Process.on('exit', exitAction);
-    Process.on('SIGINT', exitAction);
 
     var authService = AuthService(router, userDAO);
 
@@ -70,7 +69,7 @@ async function initServer() {
     var taskService = TaskService(app, router, taskDAO);
 
     app.use('/gyoda/api', userService, iterationService, projectService, taskService, authService.routes);
-    app.listen(3000);
+    app.listen(5000);
 }
 
 initServer();

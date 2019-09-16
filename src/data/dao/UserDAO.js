@@ -1,5 +1,6 @@
 const UserFactory = require('../../factory/UserFactory');
 const Mapper = require('../../util/oracle/OracleMapper');
+const GeneralUtil = require('../../util/GeneralUtil');
 const OracleConnection = require('../../util/oracle/OracleConnection');
 const Oracle = require('oracledb');
 
@@ -103,6 +104,7 @@ module.exports = class UserDAO {
         let command = `CALL CREATE_USER(:id, :name, :surname, :password, :photo, :email, :role, :skills)`;
         Object.assign(mappedUser, user);
         mappedUser.photo = Buffer.from(user.photo);
+        mappedUser.id = `${GeneralUtil.getRandomInt()}`;
         OracleConnection.execute(this.connection, command, mappedUser, {}, (err, data) => {
             if (err) { 
                 let customError = { message: `Error: ${err}`, errorCode: 1002 };

@@ -1,5 +1,6 @@
 const ServiceHandler = require('../util/ServiceHandler');
 const CheckUtil = require('../util/CheckUtil');
+const BasicResponse = require('../util/BasicResponse');
 
 let path = '/user';
 let userDAO;
@@ -65,7 +66,7 @@ const modifyUser = (req, res) => {
  */
 const insertUser = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
-    if (CheckUtil.checkProperties(req.body, ['id', 'name', 'surname', 'password', 'photo', 'email', 'role', 'skills'])) {
+    if (CheckUtil.checkProperties(req.body, ['name', 'surname', 'password', 'photo', 'email', 'role', 'skills'])) {
         userDAO.addUser(req.body, serviceHandler);
     } else {
         res.send(JSON.stringify(BasicResponse(null, `No se pudo agregar el usuario: ${err}`, 2001, false)));
