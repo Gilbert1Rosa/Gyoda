@@ -31,7 +31,11 @@ const ProjectService = (app, router, injectedProjectDAO) => {
  */
 const SearchProject = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
-    projectDAO.getProjects(serviceHandler);
+    if (CheckUtil.checkProperties(req.body, ['filter'])) {
+        projectDAO.getProjectsByTitle(req.body.filter, serviceHandler);
+    } else {
+        projectDAO.getProjects(serviceHandler);
+    }
 }
 
 /**

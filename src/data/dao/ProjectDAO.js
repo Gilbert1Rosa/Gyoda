@@ -22,8 +22,7 @@ module.exports = class ProjectDAO {
         this.connection = connection;
     }
 
-    getProjects(callback) {
-        let query = `SELECT * FROM vProyectos`;
+    loadProjects(query, callback) {
         OracleConnection.execute(this.connection, query, {}, {}, (err, data) => {
             if (err) { 
                 let customError = { message: `Error: ${err}`, errorCode: 2002 };
@@ -33,6 +32,14 @@ module.exports = class ProjectDAO {
                 callback(null, mappedData);
             }
         });
+    }
+
+    getProjects(callback) {
+        this.loadProjects(`SELECT * FROM vProyectos`, callback);
+    }
+
+    getProjectsByTitle(title, callback) {
+        this.loadProjects(`SELECT * FROM vProyectos WHERE titulo LIKE '%${title}%'`, callback);
     }
 
     addProject(project, callback) {

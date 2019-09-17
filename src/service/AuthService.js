@@ -36,18 +36,19 @@ module.exports = (router, injectedUserDAO) => {
 
     router.post('/login', (req, res) => {
         let hasAllParams = CheckUtil.checkProperties(req.body, ['user', 'password']);
-        let data = null;
+        let responseData = null;
         if (hasAllParams) {
             userDAO.getUserByCredentials(req.body.user, req.body.password, (err, data) => {
                 let token = null;
                 if (!err) {
                     token = createToken(req, res, data);
                     req.session.tokenData = token;
+                    responseData = { token: token, id: data[0].id }
                 }
-                ServiceHandler(req, res)(err, token);
+                ServiceHandler(req, res)(err, responseData);
             });
         } else {
-            res.send(JSON.stringify(BasicResponse(data, 'Login failed', ERROR_CODES.LOGIN_FAILED, false)));
+            res.send(JSON.stringify(BasicResponse(responseData, 'Login failed', ERROR_CODES.LOGIN_FAILED, false)));
         }
     });
     router.post('/logout', (req, res) => {
