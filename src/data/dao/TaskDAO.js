@@ -23,6 +23,14 @@ const TASK_FIELDS = [
         objName: 'iterationid'
     },
     {
+        name: 'ID_ASIGNADO',
+        objName: 'asigneeid'
+    },
+    {
+        name: 'ID_REPORTADO',
+        objName: 'reporterid'
+    },
+    {
         name: 'NOMBRE_ASIGNADO',
         objName: 'asigneeName'
     },
@@ -37,6 +45,10 @@ const TASK_FIELDS = [
     { 
         name: 'APELLIDO_REPORTADO',
         objName: 'reporterSurname'
+    },
+    {
+        name: 'ID_ESTADO',
+        objName: 'stateid'
     },
     {
         name: 'ESTADO',

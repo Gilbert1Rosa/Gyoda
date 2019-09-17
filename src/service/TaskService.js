@@ -45,7 +45,7 @@ const SearchTask = (req, res) => {
  */
 const ModifyTask = (req, res) => {
     const serviceHandler = ServiceHandler(req, res);
-    if (CheckUtil.checkProperties(req.body, ['id', 'code', 'title', 'description', 'iterationid', 
+    if (CheckUtil.checkProperties(req.body, ['id', 'code', 'title', 'description', 'iditeration', 
                                              'asignee', 'reporter', 'stateid', 'tags'])) {
         taskDAO.modifyTask(req.body, serviceHandler);
     } else {
